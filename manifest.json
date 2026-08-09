@@ -1,0 +1,10 @@
+{
+  "name": "Medina Render AI",
+  "short_name": "Medina AI",
+  "description": "AI Architectural Rendering Prompt Generator",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f2f2f2",
+  "theme_color": "#ff7a00",
+  "orientation": "portrait"
+}
