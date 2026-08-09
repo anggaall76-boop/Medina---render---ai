@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
+
+<title>Medina Render AI</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    padding:20px;
+
+    font-family:Arial,sans-serif;
+
+    background:#f2f2f2;
+
+    color:#222;
+
+}
+
+
+.container{
+
+    max-width:700px;
+
+    margin:auto;
+
+    background:#ffffff;
+
+    padding:20px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 20px
+    rgba(0,0,0,0.15);
+
+}
+
+
+h1{
+
+    text-align:center;
+
+    margin-top:0;
+
+    color:#222;
+
+}
+
+
+.subtitle{
+
+    text-align:center;
+
+    color:#666;
+
+    margin-bottom:25px;
+
+}
+
+
+label{
+
+    display:block;
+
+    margin-top:15px;
+
+    margin-bottom:6px;
+
+    font-weight:bold;
+
+}
+
+
+select,
+textarea,
+input[type="text"]{
+
+    width:100%;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+}
+
+
+textarea{
+
+    width:100%;
+
+    min-height:150px;
+
+    resize:vertical;
+
+}
+
+
+.upload-box{
+
+    border:2px dashed #aaa;
+
+    border-radius:10px;
+
+    padding:20px;
+
+    text-align:center;
+
+    margin-top:10px;
+
+    background:#fafafa;
+
+}
+
+
+.upload-box input{
+
+    width:100%;
+
+}
+
+
+#imagePreview{
+
+    margin-top:15px;
+
+    text-align:center;
+
+}
+
+
+#imagePreview img{
+
+    max-width:100%;
+
+    max-height:400px;
+
+    border-radius:10px;
+
+    object-fit:contain;
+
+    box-shadow:0 3px 10px
+    rgba(0,0,0,0.2);
+
+}
+
+
+button{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-top:15px;
+
+    border:none;
+
+    border-radius:8px;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+
+.btn-generate{
+
+    background:#ff7a00;
+
+    color:white;
+
+}
+
+
+.btn-copy{
+
+    background:#333;
+
+    color:white;
+
+}
+
+
+.btn-reset{
+
+    background:#ddd;
+
+    color:#222;
+
+}
+
+
+#promptResult{
+
+    display:none;
+
+    margin-top:20px;
+
+}
+
+
+#status{
+
+    margin-top:15px;
+
+    text-align:center;
+
+    font-weight:bold;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>Medina Render AI</h1>
+
+
+<div class="subtitle">
+
+AI Architectural Rendering Prompt Generator
+
+</div>
+
+
+<label>
+
+Upload Reference Image
+
+</label>
+
+
+<div class="upload-box">
+
+
+<input
+type="file"
+id="imageFile"
+accept="image/*"
+onchange="previewImage(event)"
+>
+
+
+<div id="imagePreview">
+
+<p>Belum ada gambar.</p>
+
+</div>
+
+
+</div>
+
+
+<label for="renderType">
+
+Render Type
+
+</label>
+
+
+<select id="renderType">
+
+
+<option value="exterior">
+
+Exterior
+
+</option>
+
+
+<option value="interior">
+
+Interior
+
+</option>
+
+
+<option value="denah">
+
+Denah
+
+</option>
+
+
+</select>
+
+
+<label for="renderStyle">
+
+Render Style
+
+</label>
+
+
+<select id="renderStyle">
+
+
+<option value="ultra-photorealistic">
+
+Ultra Photorealistic
+
+</option>
+
+
+<option value="architectural photography">
+
+Architectural Photography
+
+</option>
+
+
+<option value="cinematic">
+
+Cinematic Architectural Photography
+
+</option>
+
+
+<option value="DSLR architectural photography">
+
+DSLR Architectural Photography
+
+</option>
+
+
+<option value="hyper-realistic">
+
+Hyper Realistic
+
+</option>
+
+
+</select>
+
+
+<label for="lighting">
+
+Lighting
+
+</label>
+
+
+<select id="lighting">
+
+
+<option value="golden hour">
+
+Golden Hour
+
+</option>
+
+
+<option value="morning">
+
+Morning
+
+</option>
+
+
+<option value="afternoon">
+
+Afternoon
+
+</option>
+
+
+<option value="overcast">
+
+Overcast
+
+</option>
+
+
+<option value="sunset">
+
+Sunset
+
+</option>
+
+
+<option value="night">
+
+Night
+
+</option>
+
+
+</select>
+
+
+<label for="environment">
+
+Environment
+
+</label>
+
+
+<select id="environment">
+
+
+<option value="tropical garden">
+
+Tropical Garden
+
+</option>
+
+
+<option value="modern residential neighborhood">
+
+Modern Residential Neighborhood
+
+</option>
+
+
+<option value="urban environment">
+
+Urban Environment
+
+</option>
+
+
+<option value="natural landscape">
+
+Natural Landscape
+
+</option>
+
+
+<option value="minimalist landscape">
+
+Minimalist Landscape
+
+</option>
+
+
+<option value="Indonesian residential environment">
+
+Indonesian Residential Environment
+
+</option>
+
+
+</select>
+
+
+<label for="extraInstruction">
+
+Additional Instructions
+
+</label>
+
+
+<textarea
+id="extraInstruction"
+placeholder="Contoh: suasana sore, tambahkan mobil, tambahkan tanaman tropis, dan sebagainya."
+></textarea>
+
+
+<button
+class="btn-generate"
+onclick="generatePrompt()"
+>
+
+🚀 GENERATE PROMPT
+
+</button>
+
+
+<div id="promptResult">
+
+
+<label for="generatedPrompt">
+
+Generated Prompt
+
+</label>
+
+
+<textarea
+id="generatedPrompt"
+readonly
+></textarea>
+
+
+<button
+class="btn-copy"
+onclick="copyPrompt()"
+>
+
+📋 COPY PROMPT
+
+</button>
+
+
+</div>
+
+
+<button
+class="btn-reset"
+onclick="resetApp()"
+>
+
+🔄 RESET
+
+</button>
+
+
+<div id="status"></div>
+
+
+</div>
+
+
+
+<script>
+
+
+function previewImage(event){
+
+
+    const file =
+
+        event.target.files[0];
+
+
+    const preview =
+
+        document.getElementById(
+            "imagePreview"
+        );
+
+
+    if(!file){
+
+
+        preview.innerHTML =
+
+        "<p>Belum ada gambar.</p>";
+
+
+        return;
+
+    }
+
+
+    const reader =
+
+        new FileReader();
+
+
+    reader.onload =
+
+    function(e){
+
+
+        preview.innerHTML =
+
+        "<img src='" +
+
+        e.target.result +
+
+        "' alt='Reference Image'>";
+
+
+    };
+
+
+    reader.readAsDataURL(file);
+
+
+}
+
+
+
+function generatePrompt(){
+
+
+    const renderType =
+
+        document.getElementById(
+            "renderType"
+        ).value;
+
+
+    const renderStyle =
+
+        document.getElementById(
+            "renderStyle"
+        ).value;
+
+
+    const lighting =
+
+        document.getElementById(
+            "lighting"
+        ).value;
+
+
+    const environment =
+
+        document.getElementById(
+            "environment"
+        ).value;
+
+
+    const extra =
+
+        document.getElementById(
+            "extraInstruction"
+        ).value.trim();
+
+
+    const imageFile =
+
+        document.getElementById(
+            "imageFile"
+        ).files[0];
+
+
+    let prompt = "";
+
+
+    if(!imageFile){
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+
+        "⚠️ Silakan upload gambar referensi terlebih dahulu.";
+
+
+        return;
+
+    }
+
+
+
+    if(renderType === "exterior"){
+
+
+        prompt =
+
+        "Create an ultra-photorealistic " +
+
+        renderStyle +
+
+        " architectural photography render based strictly on the uploaded reference image. " +
+
+        "Preserve 100% of the original exterior architectural design, building geometry, shape, proportions, dimensions, layout, camera position, camera angle, perspective, composition, roof, walls, doors, windows, openings, stairs, landscape elements, materials, textures, and colors exactly as shown in the reference. " +
+
+        "Do not redesign or reinterpret the architecture. " +
+
+        "Do not change the building shape, dimensions, proportions, or structural elements. " +
+
+        "Do not add, remove, move, replace, or modify any architectural or landscape element. " +
+
+        "Keep the original camera viewpoint and composition exactly the same. " +
+
+        "Only improve the visual realism and photographic quality. " +
+
+        "Convert the reference into a professional architectural photograph with physically realistic materials, accurate surface textures, natural light behavior, realistic shadows, natural reflections, realistic depth, global illumination, high dynamic range, and professional architectural photography quality. " +
+
+        "Lighting condition: " +
+
+        lighting +
+
+        ". " +
+
+        "Environment: " +
+
+        environment +
+
+        ". ";
+
+    }
+
+
+
+    else if(renderType === "interior"){
+
+
+        prompt =
+
+        "Create an ultra-photorealistic " +
+
+        renderStyle +
+
+        " interior architectural photography render based strictly on the uploaded reference image. " +
+
+        "Preserve 100% of the original interior architectural design, room geometry, dimensions, proportions, layout, camera position, camera angle, perspective, composition, walls, ceilings, floors, doors, windows, openings, stairs, furniture placement, built-in elements, materials, textures, colors, and all existing interior elements exactly as shown in the reference. " +
+
+        "Do not redesign or reinterpret the interior. " +
+
+        "Do not change the room dimensions, layout, furniture positions, architectural elements, materials, or colors. " +
+
+        "Do not add, remove, move, replace, or modify any interior element. " +
+
+        "Keep the original camera viewpoint and composition exactly the same. " +
+
+        "Only improve the visual realism and photographic quality. " +
+
+        "Convert the reference into a professional interior architectural photograph with physically realistic materials, accurate surface textures, natural light behavior, realistic shadows, natural reflections, realistic depth, global illumination, high dynamic range, and professional architectural photography quality. " +
+
+        "Lighting condition: " +
+
+        lighting +
+
+        ". " +
+
+        "Environment: " +
+
+        environment +
+
+        ". ";
+
+    }
+
+
+
+    else if(renderType === "denah"){
+
+
+        prompt =
+
+        "Create a highly realistic three-dimensional architectural visualization based strictly on the uploaded architectural floor plan reference image. " +
+
+        "Preserve 100% of the original floor plan design, room layout, dimensions, proportions, wall positions, doors, windows, circulation, stairs, furniture placement, and all architectural elements exactly as shown in the reference. " +
+
+        "Do not redesign, reinterpret, add, remove, move, or modify any room, wall, door, window, stair, furniture, or architectural element. " +
+
+        "Maintain the exact original floor plan layout and proportions. " +
+
+        "Transform the two-dimensional floor plan into a realistic three-dimensional architectural visualization while keeping the original layout completely unchanged. " +
+
+        "Use realistic architectural materials, realistic textures, accurate lighting, realistic shadows, natural reflections, realistic depth, global illumination, and professional architectural visualization quality. " +
+
+        "Render style: " +
+
+        renderStyle +
+
+        ". " +
+
+        "Lighting condition: " +
+
+        lighting +
+
+        ". " +
+
+        "Environment: " +
+
+        environment +
+
+        ". ";
+
+    }
+
+
+
+    if(extra !== ""){
+
+
+        prompt +=
+
+        "Additional instructions: " +
+
+        extra +
+
+        ". ";
+
+    }
+
+
+
+    prompt +=
+
+    "The final result must look highly realistic and professionally photographed while maintaining the exact original architectural design, materials, colors, proportions, layout, camera viewpoint, perspective, and composition of the uploaded reference image. " +
+
+    "The AI must prioritize design preservation over creative interpretation.";
+
+
+
+    document.getElementById(
+        "generatedPrompt"
+    ).value = prompt;
+
+
+    document.getElementById(
+        "promptResult"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "status"
+    ).innerText =
+
+    "✅ Prompt berhasil dibuat.";
+
+}
+
+
+
+function copyPrompt(){
+
+
+    const prompt =
+
+        document.getElementById(
+            "generatedPrompt"
+        ).value;
+
+
+    if(prompt.trim() === ""){
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+
+        "⚠️ Belum ada prompt untuk disalin.";
+
+
+        return;
+
+    }
+
+
+    navigator.clipboard.writeText(
+        prompt
+    )
+
+
+    .then(function(){
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+
+        "✅ Prompt berhasil disalin.";
+
+
+    })
+
+
+    .catch(function(){
+
+
+        document.getElementById(
+            "status"
+        ).innerText =
+
+        "❌ Gagal menyalin prompt.";
+
+
+    });
+
+}
+
+
+
+function resetApp(){
+
+
+    document.getElementById(
+        "imageFile"
+    ).value =
+
+    "";
+
+
+    document.getElementById(
+        "renderType"
+    ).value =
+
+    "exterior";
+
+
+    document.getElementById(
+        "renderStyle"
+    ).value =
+
+    "ultra-photorealistic";
+
+
+    document.getElementById(
+        "lighting"
+    ).value =
+
+    "golden hour";
+
+
+    document.getElementById(
+        "environment"
+    ).value =
+
+    "tropical garden";
+
+
+    document.getElementById(
+        "extraInstruction"
+    ).value =
+
+    "";
+
+
+    document.getElementById(
+        "generatedPrompt"
+    ).value =
+
+    "";
+
+
+    document.getElementById(
+        "promptResult"
+    ).style.display =
+
+    "none";
+
+
+    document.getElementById(
+        "status"
+    ).innerText =
+
+    "";
+
+
+    document.getElementById(
+        "imagePreview"
+    ).innerHTML =
+
+    "<p>Belum ada gambar.</p>";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
